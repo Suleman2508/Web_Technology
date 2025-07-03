@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto py-10">
+
+    <!-- 🧭 Hero Section -->
+    <section class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-blue-800 mb-2">Plan Your Next Adventure</h1>
+        <p class="text-gray-600 text-lg">Seamlessly manage travel bookings with real-time analytics and insights.</p>
+        <a href="/bookings" class="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+            View Bookings
+        </a>
+    </section>
+
+    <!-- 📊 Summary Cards -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-white p-6 rounded shadow text-center">
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Total Bookings</h2>
+            <p class="text-3xl font-bold text-blue-700">{{ total_bookings }}</p>
+        </div>
+        <div class="bg-white p-6 rounded shadow text-center">
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Total Revenue</h2>
+            <p class="text-3xl font-bold text-green-600">${{ total_revenue }}</p>
+        </div>
+        <div class="bg-white p-6 rounded shadow text-center">
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Top Destination</h2>
+            <p class="text-xl font-medium text-gray-900">{{ top_destination }}</p>
+        </div>
+    </section>
+
+    <!-- 💡 Why This System -->
+    <section class="bg-white p-6 rounded shadow text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Why Use Our Travel Booking System?</h2>
+        <ul class="text-gray-700 text-left list-disc list-inside space-y-2 max-w-xl mx-auto">
+            <li>📌 Centralized database with live booking records</li>
+            <li>📊 Real-time revenue and customer analysis</li>
+            <li>🔍 Advanced filters for quick searches</li>
+            <li>🌐 Web-based dashboard with clean UI</li>
+            <li>📈 Scalable system for future enhancements</li>
+        </ul>
+    </section>
+</div>
+{% endblock %}

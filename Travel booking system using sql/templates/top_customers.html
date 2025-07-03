@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-6">Top Customers</h1>
+    <div class="bg-white p-4 rounded shadow">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="p-2">Rank</th>
+                    <th class="p-2">Customer</th>
+                    <th class="p-2">Email</th>
+                    <th class="p-2">Total Spent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in top_customers %}
+                <tr class="border-t">
+                    <td class="p-2">{{ customer['spending_rank'] }}</td>
+                    <td class="p-2">{{ customer['Name'] }}</td>
+                    <td class="p-2">{{ customer['Email'] }}</td>
+                    <td class="p-2">${{ customer['total_spent'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

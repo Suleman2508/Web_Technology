@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-6 text-blue-800">Bookings</h1>
+
+    <!-- 🔍 Advanced Filter Form -->
+    <div class="mb-6 bg-white p-4 rounded shadow">
+        <form class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4" action="/bookings" method="get">
+            <input type="text" name="search_name" placeholder="Customer Name" class="border p-2 rounded">
+            <input type="text" name="email" placeholder="Email" class="border p-2 rounded">
+            <input type="text" name="phone" placeholder="Phone" class="border p-2 rounded">
+            <select name="city" class="border p-2 rounded">
+                <option value="">All Cities</option>
+                <option value="Paris">Paris</option>
+                <option value="Tokyo">Tokyo</option>
+                <option value="New York">New York</option>
+            </select>
+            <select name="month" class="border p-2 rounded">
+                <option value="">All Months</option>
+                {% for i in range(1, 13) %}
+                <option value="{{ i }}">{{ '%02d'|format(i) }}</option>
+                {% endfor %}
+            </select>
+            <input type="date" name="from_date" class="border p-2 rounded" placeholder="From">
+            <input type="date" name="to_date" class="border p-2 rounded" placeholder="To">
+            <select name="group_size" class="border p-2 rounded">
+                <option value="">All Group Sizes</option>
+                <option value="solo">Solo (1)</option>
+                <option value="small">Small (2–3)</option>
+                <option value="large">Large (4+)</option>
+            </select>
+            <select name="sort_by" class="border p-2 rounded">
+                <option value="">Sort By</option>
+                <option value="amount">Amount (High to Low)</option>
+                <option value="date">Date (Newest First)</option>
+                <option value="persons">Group Size (High to Low)</option>
+            </select>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Filter
+            </button>
+        </form>
+    </div>
+
+    <!-- 📋 Bookings Table -->
+    <div class="bg-white p-4 rounded shadow mb-6 overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="p-2">Booking ID</th>
+                    <th class="p-2">Customer</th>
+                    <th class="p-2">Email</th>
+                    <th class="p-2">Phone</th>
+                    <th class="p-2">City</th>
+                    <th class="p-2">Package</th>
+                    <th class="p-2">Travel Date</th>
+                    <th class="p-2">Persons</th>
+                    <th class="p-2">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr class="border-t">
+                    <td class="p-2">{{ booking['BookingID'] }}</td>
+                    <td class="p-2">{{ booking['Name'] }}</td>
+                    <td class="p-2">{{ booking['Email'] }}</td>
+                    <td class="p-2">{{ booking['Phone'] }}</td>
+                    <td class="p-2">{{ booking['City'] }}</td>
+                    <td class="p-2">{{ booking['PackageName'] }}</td>
+                    <td class="p-2">{{ booking['TravelDate'] }}</td>
+                    <td class="p-2">{{ booking['NumberOfPersons'] }}</td>
+                    <td class="p-2">${{ booking['Amount'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if bookings|length == 0 %}
+        <p class="text-center text-red-600 mt-4">No bookings found with the selected filters.</p>
+        {% endif %}
+    </div>
+
+    <!-- 👥 Group Bookings Summary -->
+    <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-xl font-bold mb-4">Group Bookings (More than 2 Persons)</h2>
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="p-2">Booking ID</th>
+                    <th class="p-2">Customer</th>
+                    <th class="p-2">City</th>
+                    <th class="p-2">Package</th>
+                    <th class="p-2">Persons</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in group_bookings %}
+                <tr class="border-t">
+                    <td class="p-2">{{ booking['BookingID'] }}</td>
+                    <td class="p-2">{{ booking['Name'] }}</td>
+                    <td class="p-2">{{ booking['City'] }}</td>
+                    <td class="p-2">{{ booking['PackageName'] }}</td>
+                    <td class="p-2">{{ booking['NumberOfPersons'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
