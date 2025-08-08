@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wikipedia Search</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #f2f5f9;
+        padding: 20px;
+        text-align: center;
+    }
+    h1 {
+        color: #333;
+    }
+    #searchBox {
+        width: 350px;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+    #searchBox:focus {
+        border-color: #0078d4;
+    }
+    #results {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .result {
+        background: white;
+        padding: 15px;
+        margin: 10px;
+        width: 80%;
+        border-radius: 8px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        animation: fadeIn 0.4s ease-in;
+    }
+    .result:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    a {
+        color: #0078d4;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    p {
+        color: #555;
+    }
+    #loading {
+        display: none;
+        font-size: 16px;
+        color: #0078d4;
+    }
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(10px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+</style>
+</head>
+<body>
+
+<h1>🔍 Wikipedia Search</h1>
+<input type="text" id="searchBox" placeholder="Type to search Wikipedia...">
+<p id="loading">Loading...</p>
+
+<div id="results"></div>
+
+<script>
+    const searchBox = document.getElementById("searchBox");
+    const resultsDiv = document.getElementById("results");
+    const loading = document.getElementById("loading");
+
+    let timer;
+
+    searchBox.addEventListener("input", () => {
+        clearTimeout(timer);
+        const query = searchBox.value.trim();
+        if (query === "") {
+            resultsDiv.innerHTML = "";
+            return;
+        }
+        timer = setTimeout(() => {
+            searchWikipedia(query);
+        }, 400); // delay for better UX
+    });
+
+    function searchWikipedia(query) {
+        resultsDiv.innerHTML = "";
+        loading.style.display = "block";
+
+        const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&utf8=&format=json&origin=*`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                loading.style.display = "none";
+                const results = data.query.search;
+                if (results.length === 0) {
+                    resultsDiv.innerHTML = "<p>No results found.</p>";
+                    return;
+                }
+                results.forEach(item => {
+                    const pageUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(item.title)}`;
+                    const div = document.createElement("div");
+                    div.className = "result";
+                    div.innerHTML = `
+                        <a href="${pageUrl}" target="_blank">${item.title}</a>
+                        <p>${item.snippet}...</p>
+                    `;
+                    resultsDiv.appendChild(div);
+                });
+            })
+            .catch(err => {
+                loading.style.display = "none";
+                resultsDiv.innerHTML = "<p>Error fetching results.</p>";
+                console.error(err);
+            });
+    }
+</script>
+
+</body>
+</html>
